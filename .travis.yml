@@ -20,7 +20,8 @@ git:
   depth: false
 
 script:
-- cargo check
+- cargo build
+- cargo test
 
 notifications:
   email:
