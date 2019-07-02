@@ -13,7 +13,8 @@
 
 ## Overview
 
-This crate provides the super tiny 4x6 font of the PICO-8 fantasy console:
+This crate provides the super tiny 4x6 font of the PICO-8 fantasy console as
+an [`embedded_graphics::fonts::Font`](https://docs.rs/embedded-graphics/0.5.1/embedded_graphics/fonts/trait.Font.html):
 
 ![Font](https://www.lexaloffle.com/gfx/pico8_font.png)
 
@@ -43,4 +44,6 @@ for more information on how to use this crate.
 
 ## License
 
-The original PICO-8 font [is available under the CC-0 license](https://www.lexaloffle.com/pico-8.php?page=faq).
+* The [original PICO-8 font](https://www.lexaloffle.com/pico-8.php?page=faq)
+  is available under the [CC-0 license](https://creativecommons.org/share-your-work/public-domain/cc0/).
+* This crate is released under the [MIT License](https://opensource.org/licenses/mit-license.php).
