@@ -1,0 +1,27 @@
+sudo: false
+dist: xenial
+language: Rust
+cache:
+  directories:
+    - $HOME/.cargo/bin
+    - $TRAVIS_BUILD_DIR/target
+
+rust:
+- stable
+- beta
+- nightly
+
+env:
+  global:
+  - PATH="$HOME/.cargo/bin:$PATH"
+  - RUST_BACKTRACE=full
+
+git:
+  depth: false
+
+script:
+- cargo check
+
+notifications:
+  email:
+  - althonosdev@gmail.com
