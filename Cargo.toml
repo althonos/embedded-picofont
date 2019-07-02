@@ -1,0 +1,32 @@
+[package]
+name = "embedded-picofont"
+version = "0.1.0"
+authors = ["Martin Larralde <martin.larralde@ens-paris-saclay.fr>"]
+edition = "2018"
+license = "MIT"
+description = "The PICO-8 font to use with embedded-graphics"
+repository = "https://github.com/athonos/embedded-picofont"
+homepage = "https://github.com/athonos/embedded-picofont"
+readme = "README.md"
+categories = ["embedded", "no-std"]
+keywords = ["embedded", "graphics", "pico-8", "font"]
+build = "src/build.rs"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+embedded-graphics = "0.5.1"
+
+[build-dependencies]
+lodepng = "2.4.2"
+bitvec = "0.14.0"
+
+[badges.travis-ci]
+repository = "althonos/embedded-picofont"
+[badges.codecov]
+repository = "althonos/embedded-picofont"
+service    = "github"
+[badges.is-it-maintained-issue-resolution]
+repository = "althonos/embedded-picofont"
+[badges.maintenance]
+status     = "passively-maintained"
