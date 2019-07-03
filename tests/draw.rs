@@ -83,3 +83,8 @@ fn test_buttons() {
         "\u{96}\u{97}\u{86}\u{87}\u{a2}\u{a3}\u{a8}\u{a9}\u{9c}\u{9d}\u{ae}\u{af}",
     );
 }
+
+#[test]
+fn test_unicode() {
+    test_grayscale(&PathBuf::from("tests/unicode.png"), "😀");
+}
