@@ -24,7 +24,7 @@ is advised to only use this font to display uppercase characters.
 
 ## Usage
 
-Use the `text_pico` to create a `Drawable` text from a string:
+Use the `text_pico` macro to create a `Drawable` text from a string:
 ```rust
 use embedded_picofont::{text_pico, FontPico};
 let text: FontPico<u8> = text_pico!("Hello world!");
