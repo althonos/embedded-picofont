@@ -1,12 +1,12 @@
 // extern crate image;
-extern crate lodepng;
 extern crate bitvec;
+extern crate lodepng;
 
-use std::env::var;
-use std::path::PathBuf;
-use std::io::Write;
-use lodepng::Image;
 use lodepng::ffi::ColorType;
+use lodepng::Image;
+use std::env::var;
+use std::io::Write;
+use std::path::PathBuf;
 
 fn main() {
     // Load the original image.
