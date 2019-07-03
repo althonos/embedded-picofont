@@ -66,12 +66,11 @@ impl FontBuilderConf for FontPicoConf {
     const FONT_IMAGE_WIDTH: u32 = 128;
     fn char_offset(c: char) -> u32 {
         if c <= '\u{7f}' {
-            (c as u32) * 2
+            return (c as u32) * 2;
         } else if c <= '\u{b3}' {
-            c as u32 + 0x80
-        } else {
-            ('?' as u32) * 2
+            return c as u32 + 0x80;
         }
+        ('?' as u32) * 2
     }
 }
 
