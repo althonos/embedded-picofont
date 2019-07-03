@@ -13,7 +13,7 @@
 //!
 //! This crate provides the super tiny 4x6 font of the PICO-8 fantasy console:
 //!
-//! ![Font](https://www.lexaloffle.com/gfx/pico8_font.png)
+//! <img src="https://www.lexaloffle.com/gfx/pico8_font.png" style="width:100%;image-rendering:crisp-edges;">
 //!
 //! Please note the PICO-8 itself only use the uppercase characters, as the lowercase
 //! chars can get *really* hard to read if the display is not upscaled. As such, it
