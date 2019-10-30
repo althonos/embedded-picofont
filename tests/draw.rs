@@ -12,7 +12,7 @@ use lodepng::Bitmap;
 use lodepng::Grey;
 use lodepng::Image;
 
-pub struct GreyDisplay<C: PixelColor>(Bitmap<Grey<C>>);
+pub struct GreyDisplay<C: 'static + PixelColor>(Bitmap<Grey<C>>);
 
 impl<C: PixelColor> Drawing<C> for GreyDisplay<C> {
     fn draw<T>(&mut self, item: T)
