@@ -7,7 +7,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
-[Unreleased]: https://github.com/fastobo/fastobo/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/fastobo/fastobo/compare/v0.1.1...HEAD
+
+
+## [0.1.1] - 2019-10-30
+
+[0.1.1]: https://github.com/fastobo/fastobo/compare/v0.1.0...v0.1.1
+
+### Changed
+- Bumped `bitvec` build dependency to `0.15.0`.
 
 
 ## [0.1.0] - 2019-07-02
