@@ -2,6 +2,7 @@
 extern crate bitvec;
 extern crate lodepng;
 
+use bitvec::cursor::BigEndian;
 use lodepng::ffi::ColorType;
 use lodepng::Image;
 use std::env::var;
@@ -10,7 +11,7 @@ use std::path::PathBuf;
 
 fn main() {
     // Load the original image.
-    let mut dst: bitvec::vec::BitVec = bitvec::vec::BitVec::new();
+    let mut dst: bitvec::vec::BitVec<BigEndian, u8> = bitvec::vec::BitVec::new();
     let bmp = match lodepng::decode_file("src/font.png", ColorType::GREY, 8) {
         Ok(Image::Grey(bmp)) => bmp,
         Ok(_) => panic!("unexpected image format"),
