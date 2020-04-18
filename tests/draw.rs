@@ -5,27 +5,33 @@ extern crate lodepng;
 use std::path::Path;
 use std::path::PathBuf;
 
+use embedded_graphics::fonts::Text;
 use embedded_graphics::prelude::*;
-use embedded_picofont::text_pico;
+use embedded_graphics::pixelcolor::PixelColor;
+use embedded_graphics::pixelcolor::Gray8;
+use embedded_graphics::style::TextStyle;
+use embedded_picofont::FontPico;
 use lodepng::ffi::ColorType;
 use lodepng::Bitmap;
 use lodepng::Grey;
 use lodepng::Image;
 
-pub struct GreyDisplay<C: 'static + PixelColor>(Bitmap<Grey<C>>);
+pub struct GreyDisplay(Bitmap<Grey<u8>>);
 
-impl<C: PixelColor> Drawing<C> for GreyDisplay<C> {
-    fn draw<T>(&mut self, item: T)
-    where
-        T: IntoIterator<Item = Pixel<C>>,
-    {
-        for pixel in item.into_iter() {
-            let Pixel(coord, color) = pixel;
-            if (coord[0] as usize) < self.0.width && (coord[1] as usize) < self.0.height {
-                let index = coord[0] as usize + coord[1] as usize * self.0.width;
-                self.0.buffer[index] = Grey(color);
-            }
-        }
+impl<C: PixelColor + GrayColor> DrawTarget<C> for GreyDisplay {
+    type Error = core::convert::Infallible;
+
+    fn size(&self) -> Size {
+        Size::new(self.0.width as u32, self.0.height as u32)
+    }
+
+    fn draw_pixel(&mut self, pixel: Pixel<C>) -> Result<(), Self::Error> {
+        let Pixel(coord, color) = pixel;
+        if (coord[0] as usize) < self.0.width && (coord[1] as usize) < self.0.height {
+            let index = coord[0] as usize + coord[1] as usize * self.0.width;
+            self.0.buffer[index] = Grey(color.luma());
+        };
+        Ok(())
     }
 }
 
@@ -36,12 +42,16 @@ fn test_grayscale(reference: &Path, text: &str) {
         Err(e) => panic!("could not load reference image: {}", e),
     };
 
-    let mut display: GreyDisplay<u8> = GreyDisplay(Bitmap {
+    let mut display: GreyDisplay = GreyDisplay(Bitmap {
         buffer: vec![Grey(0); exp.width * exp.height],
         width: exp.width,
         height: exp.height,
     });
-    display.draw(text_pico!(text, stroke = Some(0xFF)));
+
+    Text::new(text, Point::new(0, 0))
+        .into_styled(TextStyle::new(FontPico, Gray8::WHITE))
+        .draw(&mut display)
+        .unwrap();
 
     if exp.buffer != display.0.buffer {
         lodepng::encode_file(

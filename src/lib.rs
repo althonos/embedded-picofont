@@ -50,29 +50,8 @@
 
 #![no_std]
 
-use embedded_graphics::fonts::font_builder::FontBuilder;
-use embedded_graphics::fonts::font_builder::FontBuilderConf;
-
-#[derive(Debug, Copy, Clone)]
-/// The [`FontBuilderConf`] implemtation for the PICO-8 font.
-///
-/// [`FontBuilderConf`]: https://docs.rs/embedded-graphics/latest/embedded_graphics/fonts/font_builder/trait.FontBuilderConf.html
-pub struct FontPicoConf;
-
-impl FontBuilderConf for FontPicoConf {
-    const FONT_IMAGE: &'static [u8] = include_bytes!(concat!(env!("OUT_DIR"), "/font.raw"));
-    const CHAR_HEIGHT: u32 = 6;
-    const CHAR_WIDTH: u32 = 4;
-    const FONT_IMAGE_WIDTH: u32 = 128;
-    fn char_offset(c: char) -> u32 {
-        if c <= '\u{7f}' {
-            return (c as u32) * 2;
-        } else if c <= '\u{b3}' {
-            return c as u32 + 0x80;
-        }
-        ('?' as u32) * 2
-    }
-}
+use embedded_graphics::fonts::Font;
+use embedded_graphics::geometry::Size;
 
 /// The 4x6 pixel monospace font used by the PICO-fantasy 8 console.
 ///
@@ -133,32 +112,49 @@ impl FontBuilderConf for FontPicoConf {
 ///         .stroke(Some(0u8)),
 /// );
 /// ```
-pub type FontPico<'a, C> = FontBuilder<'a, C, FontPicoConf>;
+#[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
+pub struct FontPico;
 
-#[macro_export]
-/// Render text using the [`FontPico`] font.
-///
-/// ```rust
-/// use embedded_graphics::prelude::*;
-/// use embedded_picofont::{text_pico, FontPico};
-///
-/// let text: FontPico<u8> = text_pico!("Hello world!");
-/// let styled_text: FontPico<u8> = text_pico!(
-///     "Hello world!",
-///     stroke = Some(10u8),
-/// );
-/// ```
-///
-/// Style properties like `stroke` map to the method calls on the [`WithStyle`].
-/// trait.
-///
-/// [`FontPico`]: ./type.FontPico.html
-/// [`WithStyle`]: https://docs.rs/embedded-graphics/latest/embedded_graphics/style/trait.WithStyle.html
-macro_rules! text_pico {
-    ($text:expr $(, $style_key:ident = $style_value:expr )* $(,)?) => {{
-        #[allow(unused_imports)]
-        use embedded_graphics::style::WithStyle;
-        $crate::FontPico::render_str($text)
-            $( .$style_key($style_value) )*
-    }};
+impl Font for FontPico {
+    const FONT_IMAGE: &'static [u8] = include_bytes!(concat!(env!("OUT_DIR"), "/font.raw"));
+    const FONT_IMAGE_WIDTH: u32 = 128;
+
+    const CHARACTER_SIZE: Size = Size::new(4, 6);
+
+    fn char_offset(c: char) -> u32 {
+        if c <= '\u{7f}' {
+            return (c as u32) * 2;
+        } else if c <= '\u{b3}' {
+            return c as u32 + 0x80;
+        }
+        ('?' as u32) * 2
+    }
 }
+
+// #[macro_export]
+// /// Render text using the [`FontPico`] font.
+// ///
+// /// ```rust
+// /// use embedded_graphics::prelude::*;
+// /// use embedded_picofont::{text_pico, FontPico};
+// ///
+// /// let text: FontPico<u8> = text_pico!("Hello world!");
+// /// let styled_text: FontPico<u8> = text_pico!(
+// ///     "Hello world!",
+// ///     stroke = Some(10u8),
+// /// );
+// /// ```
+// ///
+// /// Style properties like `stroke` map to the method calls on the [`WithStyle`].
+// /// trait.
+// ///
+// /// [`FontPico`]: ./type.FontPico.html
+// /// [`WithStyle`]: https://docs.rs/embedded-graphics/latest/embedded_graphics/style/trait.WithStyle.html
+// macro_rules! text_pico {
+//     ($text:expr $(, $style_key:ident = $style_value:expr )* $(,)?) => {{
+//         #[allow(unused_imports)]
+//         use embedded_graphics::style::TextStyle;
+//         $crate::FontPico::render_str($text)
+//             $( .$style_key($style_value) )*
+//     }};
+// }
