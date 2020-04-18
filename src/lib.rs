@@ -21,20 +21,30 @@
 //!
 //! # Usage
 //!
-//! Use the [`text_pico`] macro to create a `Drawable` text from a string:
+//! Use `TextStyle` to attach the PICO-8 font to a text:
 //! ```rust
 //! use embedded_graphics::prelude::*;
-//! use embedded_picofont::{text_pico, FontPico};
-//! let text: FontPico<u8> = text_pico!("Hello world!");
+//! use embedded_graphics::fonts::Text;
+//! use embedded_graphics::pixelcolor::Gray8;
+//! use embedded_graphics::style::TextStyle;
+//! use embedded_picofont::FontPico;
+//!
+//! let text = Text::new("Hello world!", Point::new(0, 0))
+//!     .into_styled(TextStyle::new(FontPico, Gray8::WHITE));
 //! ```
 //! ![Hello world](https://github.com/althonos/embedded-picofont/raw/master/static/helloworld.png)
 //!
 //! The PICO-8 also has wide characters: these can be displayed using two smaller
 //! characters in the `128..255` char range:
 //! ```rust
-//! use embedded_graphics::prelude::*;
-//! use embedded_picofont::{text_pico, FontPico};
-//! let text: FontPico<u8> = text_pico!("PRESS \u{96}\u{97} TO GO BACK");
+//! # use embedded_graphics::prelude::*;
+//! # use embedded_graphics::fonts::Text;
+//! # use embedded_graphics::pixelcolor::Gray8;
+//! # use embedded_graphics::style::TextStyle;
+//! # use embedded_picofont::FontPico;
+//!
+//! let text = Text::new("PRESS \u{96}\u{97} TO GO BACK", Point::new(0, 0))
+//!     .into_styled(TextStyle::new(FontPico, Gray8::WHITE));
 //! ```
 //! ![Press left to go back](https://github.com/althonos/embedded-picofont/raw/master/static/goback.png)
 //!
@@ -60,57 +70,54 @@ use embedded_graphics::geometry::Size;
 /// ## Write some text to the screen at the default `(0, 0)` position
 ///
 /// ```rust
-/// use embedded_graphics::prelude::*;
-/// use embedded_picofont::FontPico;
-/// use embedded_picofont::text_pico;
-/// # use embedded_graphics::mock_display::Display;
-/// # let mut display = Display::default();
-///
-/// // Use struct methods directly
-/// display.draw(FontPico::render_str("Hello Rust!"));
-///
-/// // Use a macro instead
-/// display.draw(text_pico!("Hello Rust!"));
+/// # use embedded_graphics::prelude::*;
+/// # use embedded_graphics::fonts::Text;
+/// # use embedded_graphics::pixelcolor::Gray8;
+/// # use embedded_graphics::style::TextStyle;
+/// # use embedded_picofont::FontPico;
+/// # use embedded_graphics::mock_display::MockDisplay;
+/// # let mut display = MockDisplay::default();
+/// Text::new("Hello Rust!", Point::new(0, 0))
+///     .into_styled(TextStyle::new(FontPico, Gray8::WHITE))
+///     .draw(&mut display);
 /// ```
 ///
 /// ## Translate text by (20px, 30px)
 ///
 /// ```rust
-/// use embedded_graphics::prelude::*;
-/// use embedded_picofont::FontPico;
-/// # use embedded_graphics::mock_display::Display;
-/// # let mut display = Display::default();
-///
-/// display.draw(
-///     FontPico::render_str("Hello Rust!").translate(Coord::new(20, 30))
-/// );
+/// # use embedded_graphics::prelude::*;
+/// # use embedded_graphics::fonts::Text;
+/// # use embedded_graphics::pixelcolor::Gray8;
+/// # use embedded_graphics::style::TextStyle;
+/// # use embedded_picofont::FontPico;
+/// # use embedded_graphics::mock_display::MockDisplay;
+/// # let mut display = MockDisplay::default();
+/// Text::new("Hello Rust!", Point::new(20, 30))
+///     .into_styled(TextStyle::new(FontPico, Gray8::WHITE))
+///     .draw(&mut display);
 /// ```
 ///
 /// ## Add some styling to the text
 ///
-/// Use [any method provided by the `WithStyle` trait](https://docs.rs/embedded-graphics/latest/embedded_graphics/style/trait.WithStyle.html#required-methods).
-/// Properties like `fill` or `stroke` passed to the `text_pico` macro are converted into method
-/// calls verbatim.
+/// Use the [`TextStyleBuilder`](https://docs.rs/embedded-graphics/0.6.1/embedded_graphics/style/struct.TextStyleBuilder.html)
+/// trait to edit the colors of the rendered text:
 ///
 /// ```rust
-/// use embedded_graphics::prelude::*;
-/// use embedded_picofont::text_pico;
-/// use embedded_picofont::FontPico;
-/// # use embedded_graphics::mock_display::Display;
-/// # let mut display = Display::default();
+/// # use embedded_graphics::prelude::*;
+/// # use embedded_graphics::fonts::Text;
+/// # use embedded_graphics::pixelcolor::Rgb888;
+/// # use embedded_graphics::style::TextStyleBuilder;
+/// # use embedded_picofont::FontPico;
+/// # use embedded_graphics::mock_display::MockDisplay;
+/// # let mut display = MockDisplay::default();
+/// let style = TextStyleBuilder::new(FontPico)
+///     .text_color(Rgb888::MAGENTA)
+///     .background_color(Rgb888::BLACK)
+///     .build();
 ///
-/// display.draw(text_pico!(
-///     "Hello Rust!",
-///     fill = Some(1u8),
-///     stroke = Some(0u8)
-/// ));
-///
-/// display.draw(
-///     FontPico::render_str("Hello Rust!")
-///         .translate(Coord::new(20, 30))
-///         .fill(Some(1u8))
-///         .stroke(Some(0u8)),
-/// );
+/// Text::new("Hello Rust!", Point::new(0, 0))
+///     .into_styled(style)
+///     .draw(&mut display);
 /// ```
 #[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct FontPico;
@@ -130,31 +137,3 @@ impl Font for FontPico {
         ('?' as u32) * 2
     }
 }
-
-// #[macro_export]
-// /// Render text using the [`FontPico`] font.
-// ///
-// /// ```rust
-// /// use embedded_graphics::prelude::*;
-// /// use embedded_picofont::{text_pico, FontPico};
-// ///
-// /// let text: FontPico<u8> = text_pico!("Hello world!");
-// /// let styled_text: FontPico<u8> = text_pico!(
-// ///     "Hello world!",
-// ///     stroke = Some(10u8),
-// /// );
-// /// ```
-// ///
-// /// Style properties like `stroke` map to the method calls on the [`WithStyle`].
-// /// trait.
-// ///
-// /// [`FontPico`]: ./type.FontPico.html
-// /// [`WithStyle`]: https://docs.rs/embedded-graphics/latest/embedded_graphics/style/trait.WithStyle.html
-// macro_rules! text_pico {
-//     ($text:expr $(, $style_key:ident = $style_value:expr )* $(,)?) => {{
-//         #[allow(unused_imports)]
-//         use embedded_graphics::style::TextStyle;
-//         $crate::FontPico::render_str($text)
-//             $( .$style_key($style_value) )*
-//     }};
-// }
