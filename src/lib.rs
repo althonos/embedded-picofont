@@ -21,7 +21,8 @@
 //!
 //! # Usage
 //!
-//! Use `TextStyle` to attach the PICO-8 font to a text:
+//! Use [`TextStyle`](https://docs.rs/embedded-graphics/0.6.1/embedded_graphics/style/struct.TextStyle.html)
+//! to attach the PICO-8 font to a text:
 //! ```rust
 //! use embedded_graphics::prelude::*;
 //! use embedded_graphics::fonts::Text;

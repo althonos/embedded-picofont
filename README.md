@@ -24,10 +24,12 @@ is advised to only use this font to display uppercase characters.
 
 ## Usage
 
-Use the `text_pico` macro to create a `Drawable` text from a string:
+Use [`TextStyle`](https://docs.rs/embedded-graphics/0.6.1/embedded_graphics/style/struct.TextStyle.html)
+to attach the PICO-8 font to a text:
 ```rust
-use embedded_picofont::{text_pico, FontPico};
-let text: FontPico<u8> = text_pico!("Hello world!");
+use embedded_picofont::FontPico;
+let text = Text::new("Hello world!", Point::new(0, 0))
+    .into_styled(TextStyle::new(FontPico, Gray8::WHITE));
 ```
 ![Hello world](https://github.com/althonos/embedded-picofont/raw/master/static/helloworld.png)
 
@@ -35,7 +37,8 @@ The PICO-8 also has wide characters: these can be displayed using two smaller
 characters in the `128..255` char range:
 ```rust
 use embedded_picofont::{text_pico, FontPico};
-let text: FontPico<u8> = text_pico!("PRESS \u{96}\u{97} TO GO BACK");
+let text = Text::new("PRESS \u{96}\u{97} TO GO BACK", Point::new(0, 0))
+    .into_styled(TextStyle::new(FontPico, Gray8::WHITE));
 ```
 ![Press left to go back](https://github.com/althonos/embedded-picofont/raw/master/static/goback.png)
 

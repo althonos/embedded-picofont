@@ -7,7 +7,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
-[Unreleased]: https://github.com/fastobo/fastobo/compare/v0.1.1...HEAD
+[Unreleased]: https://github.com/fastobo/fastobo/compare/v0.2.0...HEAD
+
+
+## [0.2.0] - 2020-04-18
+
+[0.2.0]: https://github.com/fastobo/fastobo/compare/v0.1.1...v0.2.0
+
+### Changed
+- Bumped `embedded-graphics` dependency to `v0.6.0`.
+### Removed
+- `text_pico` macro (not useful with `embedded-graphics` new API).
 
 
 ## [0.1.1] - 2019-10-30
