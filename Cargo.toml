@@ -16,7 +16,7 @@ build = "src/build.rs"
 embedded-graphics = "0.6.0"
 [build-dependencies]
 lodepng = "2.4.2"
-bitvec = "0.17.1"
+bitvec = "0.19.0"
 [dev-dependencies]
 lodepng = "2.4.2"
 
