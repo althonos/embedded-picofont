@@ -15,10 +15,10 @@ build = "src/build.rs"
 [dependencies]
 embedded-graphics = "0.6.0"
 [build-dependencies]
-lodepng = "2.4.2"
+lodepng = "3.2.2"
 bitvec = "0.17.1"
 [dev-dependencies]
-lodepng = "2.4.2"
+lodepng = "3.2.2"
 
 [badges.travis-ci]
 repository = "althonos/embedded-picofont"
