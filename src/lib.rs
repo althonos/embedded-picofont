@@ -11,7 +11,7 @@
 //!
 //! # Overview
 //!
-//! This crate provides the super tiny 4x6 font of the PICO-8 fantasy console:
+//! This crate provides the super tiny 4x6 font of the PICO-8 fantasy console as an [`embedded_graphics::fonts::Font`](https://docs.rs/embedded-graphics/0.5.1/embedded_graphics/fonts/trait.Font.html)::
 //!
 //! <img src="https://www.lexaloffle.com/gfx/pico8_font.png" style="width:100%;image-rendering:-moz-crisp-edges;image-rendering:-o-crisp-edges;image-rendering:-webkit-optimize-contrast;image-rendering: crisp-edges;-ms-interpolation-mode: nearest-neighbor;">
 //!
