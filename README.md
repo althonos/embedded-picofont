@@ -1,6 +1,6 @@
 # `embedded-picofont` [![Star me](https://img.shields.io/github/stars/althonos/embedded-picofont.svg?style=social&label=Star&maxAge=3600)](https://github.com/althonos/embedded-picofont/stargazers)
 
-*The PICO-8 font to use with [`embedded-graphics`](https://docs.rs/embedded-graphics).*
+*The PICO-8 font to use with [`embedded-graphics`](https://crates.io/crates/embedded-graphics).*
 
 [![TravisCI](https://img.shields.io/travis/althonos/embedded-picofont/master.svg?maxAge=600&style=flat-square)](https://travis-ci.org/althonos/embedded-picofont/branches)
 [![Codecov](https://img.shields.io/codecov/c/gh/althonos/embedded-picofont/master.svg?style=flat-square&maxAge=600)](https://codecov.io/gh/althonos/embedded-picofont)
@@ -14,7 +14,7 @@
 ## Overview
 
 This crate provides the super tiny 4x6 font of the PICO-8 fantasy console as
-an [`embedded_graphics::fonts::Font`](https://docs.rs/embedded-graphics/0.5.1/embedded_graphics/fonts/trait.Font.html):
+an [`embedded_graphics::fonts::Font`](https://docs.rs/embedded-graphics/0.6.2/embedded_graphics/fonts/trait.Font.html):
 
 ![Font](https://www.lexaloffle.com/gfx/pico8_font.png)
 
@@ -24,7 +24,7 @@ is advised to only use this font to display uppercase characters.
 
 ## Usage
 
-Use [`TextStyle`](https://docs.rs/embedded-graphics/0.6.1/embedded_graphics/style/struct.TextStyle.html)
+Use [`TextStyle`](https://docs.rs/embedded-graphics/0.6.2/embedded_graphics/style/struct.TextStyle.html)
 to attach the PICO-8 font to a text:
 ```rust
 use embedded_picofont::FontPico;
