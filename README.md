@@ -2,7 +2,7 @@
 
 *The PICO-8 font to use with [`embedded-graphics`](https://crates.io/crates/embedded-graphics).*
 
-[![TravisCI](https://img.shields.io/travis/althonos/embedded-picofont/master.svg?maxAge=600&style=flat-square)](https://travis-ci.org/althonos/embedded-picofont/branches)
+[![TravisCI](https://img.shields.io/travis/com/althonos/embedded-picofont/master.svg?maxAge=600&style=flat-square)](https://travis-ci.com/althonos/embedded-picofont/branches)
 [![Codecov](https://img.shields.io/codecov/c/gh/althonos/embedded-picofont/master.svg?style=flat-square&maxAge=600)](https://codecov.io/gh/althonos/embedded-picofont)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square&maxAge=2678400)](https://choosealicense.com/licenses/mit/)
 [![Source](https://img.shields.io/badge/source-GitHub-303030.svg?maxAge=2678400&style=flat-square)](https://github.com/althonos/embedded-picofont)
