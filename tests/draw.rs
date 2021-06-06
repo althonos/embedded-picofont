@@ -5,12 +5,11 @@ extern crate lodepng;
 use std::path::Path;
 use std::path::PathBuf;
 
-use embedded_graphics::fonts::Text;
-use embedded_graphics::prelude::*;
-use embedded_graphics::pixelcolor::PixelColor;
+use embedded_graphics::mono_font::MonoTextStyle;
 use embedded_graphics::pixelcolor::Gray8;
-use embedded_graphics::style::TextStyle;
-use embedded_picofont::FontPico;
+use embedded_graphics::prelude::*;
+use embedded_graphics::text::Text;
+use embedded_picofont::PICO_FONT;
 use lodepng::ffi::ColorType;
 use lodepng::Bitmap;
 use lodepng::Grey;
@@ -18,20 +17,28 @@ use lodepng::Image;
 
 pub struct GreyDisplay(Bitmap<Grey<u8>>);
 
-impl<C: PixelColor + GrayColor> DrawTarget<C> for GreyDisplay {
+impl DrawTarget for GreyDisplay {
+    type Color = Gray8;
     type Error = core::convert::Infallible;
 
+    fn draw_iter<I>(&mut self, pixels: I) -> Result<(), Self::Error>
+    where
+        I: IntoIterator<Item = Pixel<Self::Color>>,
+    {
+        for Pixel(coord, color) in pixels.into_iter() {
+            if (coord[0] as usize) < self.0.width && (coord[1] as usize) < self.0.height {
+                let index = coord[0] as usize + coord[1] as usize * self.0.width;
+                self.0.buffer[index] = Grey(color.luma());
+            }
+        }
+
+        Ok(())
+    }
+}
+
+impl OriginDimensions for GreyDisplay {
     fn size(&self) -> Size {
         Size::new(self.0.width as u32, self.0.height as u32)
-    }
-
-    fn draw_pixel(&mut self, pixel: Pixel<C>) -> Result<(), Self::Error> {
-        let Pixel(coord, color) = pixel;
-        if (coord[0] as usize) < self.0.width && (coord[1] as usize) < self.0.height {
-            let index = coord[0] as usize + coord[1] as usize * self.0.width;
-            self.0.buffer[index] = Grey(color.luma());
-        };
-        Ok(())
     }
 }
 
@@ -48,10 +55,13 @@ fn test_grayscale(reference: &Path, text: &str) {
         height: exp.height,
     });
 
-    Text::new(text, Point::new(0, 0))
-        .into_styled(TextStyle::new(FontPico, Gray8::WHITE))
-        .draw(&mut display)
-        .unwrap();
+    Text::new(
+        text,
+        Point::new(0, 6),
+        MonoTextStyle::new(&PICO_FONT, Gray8::WHITE),
+    )
+    .draw(&mut display)
+    .unwrap();
 
     if exp.buffer != display.0.buffer {
         lodepng::encode_file(
