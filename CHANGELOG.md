@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 [Unreleased]: https://github.com/althonos/embedded-picofont/compare/v0.2.1...HEAD
 
+### Changed
+- **(breaking)** Bumped `embedded-graphics` dependency to `v0.7.0`.
+- **(breaking)** The `FontPico` struct is now a `const` called `PICO_FONT`.
 
 ## [0.2.1] - 2020-11-27
 

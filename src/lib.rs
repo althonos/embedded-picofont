@@ -11,7 +11,7 @@
 //!
 //! # Overview
 //!
-//! This crate provides the super tiny 4x6 font of the PICO-8 fantasy console as an [`embedded_graphics::fonts::Font`](https://docs.rs/embedded-graphics/0.6.2/embedded_graphics/fonts/trait.Font.html)::
+//! This crate provides the super tiny 4x6 font of the PICO-8 fantasy console as an [`embedded_graphics::fonts::Font`](https://docs.rs/embedded-graphics/0.6.2/embedded_graphics/fonts/trait.Font.html):
 //!
 //! <img src="https://www.lexaloffle.com/gfx/pico8_font.png" style="width:100%;image-rendering:-moz-crisp-edges;image-rendering:-o-crisp-edges;image-rendering:-webkit-optimize-contrast;image-rendering: crisp-edges;-ms-interpolation-mode: nearest-neighbor;">
 //!
@@ -21,17 +21,18 @@
 //!
 //! # Usage
 //!
-//! Use [`TextStyle`](https://docs.rs/embedded-graphics/0.6.2/embedded_graphics/style/struct.TextStyle.html)
+//! Use [`MonoTextStyle`](https://docs.rs/embedded-graphics/0.7.0/embedded_graphics/mono_font/struct.MonoTextStyle.html)
 //! to attach the PICO-8 font to a text:
 //! ```rust
 //! use embedded_graphics::prelude::*;
-//! use embedded_graphics::fonts::Text;
+//! use embedded_graphics::text::Text;
 //! use embedded_graphics::pixelcolor::Gray8;
-//! use embedded_graphics::style::TextStyle;
-//! use embedded_picofont::FontPico;
+//! use embedded_graphics::mono_font::MonoTextStyle;
+//! use embedded_picofont::PICO_FONT;
 //!
-//! let text = Text::new("Hello world!", Point::new(0, 0))
-//!     .into_styled(TextStyle::new(FontPico, Gray8::WHITE));
+//! let style = MonoTextStyle::new(&PICO_FONT, Gray8::WHITE);
+//!
+//! let text = Text::new("Hello world!", Point::new(0, 6), style);
 //! ```
 //! ![Hello world](https://github.com/althonos/embedded-picofont/raw/master/static/helloworld.png)
 //!
@@ -39,13 +40,14 @@
 //! characters in the `128..255` char range:
 //! ```rust
 //! # use embedded_graphics::prelude::*;
-//! # use embedded_graphics::fonts::Text;
+//! # use embedded_graphics::text::Text;
 //! # use embedded_graphics::pixelcolor::Gray8;
-//! # use embedded_graphics::style::TextStyle;
-//! # use embedded_picofont::FontPico;
+//! # use embedded_graphics::mono_font::MonoTextStyle;
+//! # use embedded_picofont::PICO_FONT;
 //!
-//! let text = Text::new("PRESS \u{96}\u{97} TO GO BACK", Point::new(0, 0))
-//!     .into_styled(TextStyle::new(FontPico, Gray8::WHITE));
+//! let style = MonoTextStyle::new(&PICO_FONT, Gray8::WHITE);
+//!
+//! let text = Text::new("PRESS \u{96}\u{97} TO GO BACK", Point::new(0, 6), style);
 //! ```
 //! ![Press left to go back](https://github.com/althonos/embedded-picofont/raw/master/static/goback.png)
 //!
@@ -61,8 +63,10 @@
 
 #![no_std]
 
-use embedded_graphics::fonts::Font;
 use embedded_graphics::geometry::Size;
+use embedded_graphics::image::ImageRaw;
+use embedded_graphics::mono_font::DecorationDimensions;
+use embedded_graphics::mono_font::MonoFont;
 
 /// The 4x6 pixel monospace font used by the PICO-fantasy 8 console.
 ///
@@ -72,14 +76,15 @@ use embedded_graphics::geometry::Size;
 ///
 /// ```rust
 /// # use embedded_graphics::prelude::*;
-/// # use embedded_graphics::fonts::Text;
+/// # use embedded_graphics::text::Text;
 /// # use embedded_graphics::pixelcolor::Gray8;
-/// # use embedded_graphics::style::TextStyle;
-/// # use embedded_picofont::FontPico;
+/// # use embedded_graphics::mono_font::MonoTextStyle;
+/// # use embedded_picofont::PICO_FONT;
 /// # use embedded_graphics::mock_display::MockDisplay;
 /// # let mut display = MockDisplay::default();
-/// Text::new("Hello Rust!", Point::new(0, 0))
-///     .into_styled(TextStyle::new(FontPico, Gray8::WHITE))
+/// let style = MonoTextStyle::new(&PICO_FONT, Gray8::WHITE);
+///
+/// Text::new("Hello Rust!", Point::new(0, 6), style)
 ///     .draw(&mut display);
 /// ```
 ///
@@ -87,54 +92,55 @@ use embedded_graphics::geometry::Size;
 ///
 /// ```rust
 /// # use embedded_graphics::prelude::*;
-/// # use embedded_graphics::fonts::Text;
+/// # use embedded_graphics::text::Text;
 /// # use embedded_graphics::pixelcolor::Gray8;
-/// # use embedded_graphics::style::TextStyle;
-/// # use embedded_picofont::FontPico;
+/// # use embedded_graphics::mono_font::MonoTextStyle;
+/// # use embedded_picofont::PICO_FONT;
 /// # use embedded_graphics::mock_display::MockDisplay;
 /// # let mut display = MockDisplay::default();
-/// Text::new("Hello Rust!", Point::new(20, 30))
-///     .into_styled(TextStyle::new(FontPico, Gray8::WHITE))
+/// let style = MonoTextStyle::new(&PICO_FONT, Gray8::WHITE);
+///
+/// Text::new("Hello Rust!", Point::new(20, 30), style)
 ///     .draw(&mut display);
 /// ```
 ///
 /// ## Add some styling to the text
 ///
-/// Use the [`TextStyleBuilder`](https://docs.rs/embedded-graphics/0.6.1/embedded_graphics/style/struct.TextStyleBuilder.html)
+/// Use the [`MonoTextStyleBuilder`](https://docs.rs/embedded-graphics/0.7.0/embedded_graphics/mono_font/struct.MonoTextStyleBuilder.html)
 /// trait to edit the colors of the rendered text:
 ///
 /// ```rust
 /// # use embedded_graphics::prelude::*;
-/// # use embedded_graphics::fonts::Text;
+/// # use embedded_graphics::text::Text;
 /// # use embedded_graphics::pixelcolor::Rgb888;
-/// # use embedded_graphics::style::TextStyleBuilder;
-/// # use embedded_picofont::FontPico;
+/// # use embedded_graphics::mono_font::MonoTextStyleBuilder;
+/// # use embedded_picofont::PICO_FONT;
 /// # use embedded_graphics::mock_display::MockDisplay;
 /// # let mut display = MockDisplay::default();
-/// let style = TextStyleBuilder::new(FontPico)
+/// let style = MonoTextStyleBuilder::new()
+///     .font(&PICO_FONT)
 ///     .text_color(Rgb888::MAGENTA)
 ///     .background_color(Rgb888::BLACK)
 ///     .build();
 ///
-/// Text::new("Hello Rust!", Point::new(0, 0))
-///     .into_styled(style)
+/// Text::new("Hello Rust!", Point::new(0, 6), style)
 ///     .draw(&mut display);
 /// ```
-#[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
-pub struct FontPico;
+pub const PICO_FONT: MonoFont = MonoFont {
+    image: ImageRaw::new_binary(include_bytes!(concat!(env!("OUT_DIR"), "/font.raw")), 128),
+    glyph_mapping: &char_offset,
+    character_size: Size::new(4, 6),
+    character_spacing: 0,
+    baseline: 6,
+    underline: DecorationDimensions::new(6, 1),
+    strikethrough: DecorationDimensions::default_strikethrough(6),
+};
 
-impl Font for FontPico {
-    const FONT_IMAGE: &'static [u8] = include_bytes!(concat!(env!("OUT_DIR"), "/font.raw"));
-    const FONT_IMAGE_WIDTH: u32 = 128;
-
-    const CHARACTER_SIZE: Size = Size::new(4, 6);
-
-    fn char_offset(c: char) -> u32 {
-        if c <= '\u{7f}' {
-            return (c as u32) * 2;
-        } else if c <= '\u{b3}' {
-            return c as u32 + 0x80;
-        }
-        ('?' as u32) * 2
+fn char_offset(c: char) -> usize {
+    if c <= '\u{7f}' {
+        return (c as usize) * 2;
+    } else if c <= '\u{b3}' {
+        return c as usize + 0x80;
     }
+    ('?' as usize) * 2
 }
